@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 export default function HomePage() {
   const [hotItems, setHotItems] = useState([]);
@@ -23,15 +24,20 @@ export default function HomePage() {
   }, []);
 
   if (loading) {
-    return <div className="loading-spinner">Loading store sections...</div>;
+    return <div className="state-message">Loading store sections...</div>;
   }
 
   return (
-    <div className="home-container">
-      <section className="product-slot">
-        <div className="slot-header">
+    <div className="page-container home-container">
+      <section className="product-slot" style={{ marginBottom: "3rem" }}>
+        <div className="slot-header" style={{ marginBottom: "1.5rem" }}>
           <h2>🔥 Hot Items</h2>
-          <span className="slot-subtitle">Trending right now</span>
+          <span
+            className="slot-subtitle"
+            style={{ color: "var(--text-muted)" }}
+          >
+            Trending right now
+          </span>
         </div>
         <div className="product-grid">
           {hotItems.map((product) => (
@@ -40,10 +46,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="product-slot">
-        <div className="slot-header">
+      <section className="product-slot" style={{ marginBottom: "3rem" }}>
+        <div className="slot-header" style={{ marginBottom: "1.5rem" }}>
           <h2>⭐ Best Sellers</h2>
-          <span className="slot-subtitle">Most loved by our customers</span>
+          <span
+            className="slot-subtitle"
+            style={{ color: "var(--text-muted)" }}
+          >
+            Most loved by our customers
+          </span>
         </div>
         <div className="product-grid">
           {bestSellers.map((product) => (
@@ -53,9 +64,21 @@ export default function HomePage() {
       </section>
 
       <section className="product-slot">
-        <div className="slot-header">
+        <div
+          className="slot-header"
+          style={{
+            marginBottom: "1.5rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <h2>✨ New Arrivals</h2>
-          <Link to="/products" className="see-all-link">
+          <Link
+            to="/products"
+            className="link"
+            style={{ color: "var(--accent-blue)" }}
+          >
             Explore All Catalog →
           </Link>
         </div>
@@ -70,16 +93,28 @@ export default function HomePage() {
 }
 
 function ProductCard({ product, badge }) {
+  const { addToCart } = useCart();
+
   return (
     <div className="product-card">
-      <div className="product-image-box">
+      <Link to={`/products/${product.id}`} className="product-image-box">
         {badge && <span className="card-badge">{badge}</span>}
         <img src={product.image} alt={product.title} />
+      </Link>
+
+      <div className="product-info">
+        <span className="product-category">{product.category}</span>
+        <Link to={`/products/${product.id}`}>
+          <h3 className="product-title">{product.title}</h3>
+        </Link>
       </div>
-      <span className="product-category">{product.category}</span>
-      <h3 className="product-name">{product.title}</h3>
-      <p className="product-price">${product.price}</p>
-      <button className="add-to-cart-btn">Add to Cart</button>
+
+      <div className="product-footer">
+        <span className="product-price">${product.price.toFixed(2)}</span>
+        <button className="add-btn" onClick={() => addToCart(product)}>
+          Add to Cart
+        </button>
+      </div>
     </div>
   );
 }

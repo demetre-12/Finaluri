@@ -1,42 +1,99 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
+  const [sortedProducts, setSortedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [sortBy, setSortBy] = useState("featured");
+
+  const { addToCart } = useCart();
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok)
+          throw new Error("Failed to load products from Fake Store API");
+        return res.json();
+      })
       .then((data) => {
         setProducts(data);
+        setSortedProducts(data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error fetching products:", err);
+        setError(err.message);
         setLoading(false);
       });
   }, []);
 
+  useEffect(() => {
+    let result = [...products];
+
+    if (sortBy === "price-low") {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sortBy === "price-high") {
+      result.sort((a, b) => b.price - a.price);
+    } else if (sortBy === "rating") {
+      result.sort((a, b) => (b.rating?.rate || 0) - (a.rating?.rate || 0));
+    }
+
+    setSortedProducts(result);
+  }, [sortBy, products]);
+
+  if (loading) return <div className="state-message">Loading catalog...</div>;
+  if (error)
+    return (
+      <div className="state-message" style={{ color: "#ef4444" }}>
+        {error}
+      </div>
+    );
+
   return (
-    <div className="products-container">
-      <h2>All Products Catalog</h2>
-      {loading ? (
-        <div className="loading-spinner">Loading catalog...</div>
-      ) : (
-        <div className="product-grid">
-          {products.map((product) => (
-            <div key={product.id} className="product-card">
-              <div className="product-image-box">
-                <img src={product.image} alt={product.title} />
-              </div>
-              <span className="product-category">{product.category}</span>
-              <h3 className="product-name">{product.title}</h3>
-              <p className="product-price">${product.price}</p>
-              <button className="add-to-cart-btn">Add to Cart</button>
-            </div>
-          ))}
+    <div className="page-container">
+      <div className="catalog-header-bar">
+        <h1>Catalog</h1>
+
+        <div className="catalog-controls">
+          <select
+            className="category-select"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="featured">Sort by: Featured</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+          </select>
         </div>
-      )}
+      </div>
+
+      <div className="product-grid">
+        {sortedProducts.map((product) => (
+          <div key={product.id} className="product-card">
+            <Link to={`/products/${product.id}`} className="product-image-box">
+              <img src={product.image} alt={product.title} />
+            </Link>
+
+            <div className="product-info">
+              <span className="product-category">{product.category}</span>
+              <Link to={`/products/${product.id}`}>
+                <h3 className="product-title">{product.title}</h3>
+              </Link>
+            </div>
+
+            <div className="product-footer">
+              <span className="product-price">${product.price.toFixed(2)}</span>
+              <button className="add-btn" onClick={() => addToCart(product)}>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
