@@ -11,7 +11,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-links">
-          <h4>Navigation</h4>
+          <h3>Navigation</h3>
           <ul>
             <li>
               <Link to="/">Home</Link>
