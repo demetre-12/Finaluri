@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { getOptimizedImageUrl } from "../utils/optimizeImage";
 
 export default function HomePage() {
   const [hotItems, setHotItems] = useState([]);
@@ -23,10 +24,6 @@ export default function HomePage() {
       });
   }, []);
 
-  if (loading) {
-    return <div className="state-message">Loading store sections...</div>;
-  }
-
   return (
     <div className="page-container home-container">
       <section className="product-slot" style={{ marginBottom: "3rem" }}>
@@ -40,9 +37,13 @@ export default function HomePage() {
           </span>
         </div>
         <div className="product-grid">
-          {hotItems.map((product) => (
-            <ProductCard key={product.id} product={product} badge="HOT" />
-          ))}
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="skeleton-card" />
+              ))
+            : hotItems.map((product) => (
+                <ProductCard key={product.id} product={product} badge="HOT" />
+              ))}
         </div>
       </section>
 
@@ -57,9 +58,13 @@ export default function HomePage() {
           </span>
         </div>
         <div className="product-grid">
-          {bestSellers.map((product) => (
-            <ProductCard key={product.id} product={product} badge="TOP" />
-          ))}
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="skeleton-card" />
+              ))
+            : bestSellers.map((product) => (
+                <ProductCard key={product.id} product={product} badge="TOP" />
+              ))}
         </div>
       </section>
 
@@ -83,9 +88,13 @@ export default function HomePage() {
           </Link>
         </div>
         <div className="product-grid">
-          {newArrivals.map((product) => (
-            <ProductCard key={product.id} product={product} badge="NEW" />
-          ))}
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="skeleton-card" />
+              ))
+            : newArrivals.map((product) => (
+                <ProductCard key={product.id} product={product} badge="NEW" />
+              ))}
         </div>
       </section>
     </div>
@@ -99,7 +108,14 @@ function ProductCard({ product, badge }) {
     <div className="product-card">
       <Link to={`/products/${product.id}`} className="product-image-box">
         {badge && <span className="card-badge">{badge}</span>}
-        <img src={product.image} alt={product.title} />
+        <img
+          src={getOptimizedImageUrl(product.image, 350)}
+          alt={product.title}
+          loading="lazy"
+          decoding="async"
+          width="200"
+          height="200"
+        />
       </Link>
 
       <div className="product-info">

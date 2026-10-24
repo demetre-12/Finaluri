@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { getOptimizedImageUrl } from "../utils/optimizeImage";
 
 export default function CartPage() {
   const { cartItems, updateQuantity, removeItem } = useCart();
@@ -30,9 +31,13 @@ export default function CartPage() {
             {cartItems.map((item) => (
               <div key={item.id} className="cart-item-card">
                 <img
-                  src={item.image}
+                  src={getOptimizedImageUrl(item.image, 180)}
                   alt={item.title}
                   className="cart-item-img"
+                  loading="lazy"
+                  decoding="async"
+                  width="90"
+                  height="90"
                 />
                 <div className="cart-item-details">
                   <span className="cart-item-category">{item.category}</span>

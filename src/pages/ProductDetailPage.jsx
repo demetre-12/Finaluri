@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { getOptimizedImageUrl } from "../utils/optimizeImage";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -29,9 +30,7 @@ export default function ProductDetailPage() {
   }, [id]);
 
   const handleAddToCart = () => {
-    for (let i = 0; i < qty; i++) {
-      addToCart(product);
-    }
+    addToCart(product, qty);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -52,13 +51,16 @@ export default function ProductDetailPage() {
       </Link>
 
       <div className="luxury-detail-grid">
-        {/* Left Side: Modern Floating Image Gallery Box */}
         <div className="luxury-image-showcase">
           <div className="glow-backdrop"></div>
-          <img src={product.image} alt={product.title} />
+          <img
+            src={getOptimizedImageUrl(product.image, 800)}
+            alt={product.title}
+            loading="eager"
+            decoding="async"
+          />
         </div>
 
-        {/* Right Side: Sleek Product Info */}
         <div className="luxury-info-panel">
           <div className="luxury-badge-row">
             <span className="luxury-category-tag">{product.category}</span>

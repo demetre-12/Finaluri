@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { getOptimizedImageUrl } from "../utils/optimizeImage";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -44,7 +45,6 @@ export default function ProductsPage() {
     setSortedProducts(result);
   }, [sortBy, products]);
 
-  if (loading) return <div className="state-message">Loading catalog...</div>;
   if (error)
     return (
       <div className="state-message" style={{ color: "#ef4444" }}>
@@ -72,27 +72,46 @@ export default function ProductsPage() {
       </div>
 
       <div className="product-grid">
-        {sortedProducts.map((product) => (
-          <div key={product.id} className="product-card">
-            <Link to={`/products/${product.id}`} className="product-image-box">
-              <img src={product.image} alt={product.title} />
-            </Link>
+        {loading
+          ? Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="skeleton-card" />
+            ))
+          : sortedProducts.map((product) => (
+              <div key={product.id} className="product-card">
+                <Link
+                  to={`/products/${product.id}`}
+                  className="product-image-box"
+                >
+                  <img
+                    src={getOptimizedImageUrl(product.image, 350)}
+                    alt={product.title}
+                    loading="lazy"
+                    decoding="async"
+                    width="200"
+                    height="200"
+                  />
+                </Link>
 
-            <div className="product-info">
-              <span className="product-category">{product.category}</span>
-              <Link to={`/products/${product.id}`}>
-                <h3 className="product-title">{product.title}</h3>
-              </Link>
-            </div>
+                <div className="product-info">
+                  <span className="product-category">{product.category}</span>
+                  <Link to={`/products/${product.id}`}>
+                    <h3 className="product-title">{product.title}</h3>
+                  </Link>
+                </div>
 
-            <div className="product-footer">
-              <span className="product-price">${product.price.toFixed(2)}</span>
-              <button className="add-btn" onClick={() => addToCart(product)}>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        ))}
+                <div className="product-footer">
+                  <span className="product-price">
+                    ${product.price.toFixed(2)}
+                  </span>
+                  <button
+                    className="add-btn"
+                    onClick={() => addToCart(product)}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            ))}
       </div>
     </div>
   );
