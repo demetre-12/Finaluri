@@ -12,7 +12,7 @@ export function CartProvider({ children }) {
         return prev.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + quantity }
-            : item
+            : item,
         );
       }
       return [...prev, { ...product, quantity }];
@@ -29,7 +29,7 @@ export function CartProvider({ children }) {
           }
           return item;
         })
-        .filter(Boolean)
+        .filter(Boolean),
     );
   };
 
@@ -39,7 +39,7 @@ export function CartProvider({ children }) {
 
   const totalItemCount = cartItems.reduce(
     (sum, item) => sum + item.quantity,
-    0
+    0,
   );
 
   return (
