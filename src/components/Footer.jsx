@@ -9,21 +9,6 @@ export default function Footer() {
           <h2 className="footer-logo">LOPEDIA</h2>
           <p>A curated collection of modern apparel & essentials.</p>
         </div>
-
-        <div className="footer-links">
-          <h3>Navigation</h3>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/products">Products</Link>
-            </li>
-            <li>
-              <Link to="/cart">Cart</Link>
-            </li>
-          </ul>
-        </div>
       </div>
 
       <div className="footer-bottom">
