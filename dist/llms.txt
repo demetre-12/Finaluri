@@ -1,0 +1,13 @@
+# Lopedia
+
+> Lopedia is a modern e-commerce platform offering high-quality products.
+
+## Core Pages
+
+- [Home](https://lopedia.vercel.app/): Main landing page with featured categories and products.
+- [Products](https://lopedia.vercel.app/products): Complete product catalog with filtering and search options.
+- [Cart](https://lopedia.vercel.app/cart): Shopping cart page for reviewing items and checkout.
+
+## Key APIs & Data
+
+- [Products API](https://fakestoreapi.com/products): Source endpoint for catalog items.
