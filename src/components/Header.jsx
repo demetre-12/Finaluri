@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
-export default function Header({ cartCount = 0 }) {
+export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const { totalItemCount } = useCart();
 
   return (
     <header className="header">
@@ -47,7 +49,7 @@ export default function Header({ cartCount = 0 }) {
               <path d="M16 10a4 4 0 0 1-8 0"></path>
             </svg>
             <span>Cart</span>
-            <span className="cart-badge">{cartCount}</span>
+            <span className="cart-badge">{totalItemCount}</span>
           </Link>
         </nav>
       </div>
