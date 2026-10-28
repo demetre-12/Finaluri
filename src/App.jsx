@@ -1,9 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import ProductList from "./pages/ProductsPage";
-import ProductDetail from "./pages/ProductDetailPage";
-import Cart from "./pages/CartPage";
+import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
+import ProductsPage from "./pages/ProductsPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import CartPage from "./pages/CartPage";
 
 export default function App() {
   return (
@@ -13,20 +14,14 @@ export default function App() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/products" element={<ProductList />} />
-          <Route path="/products/:id" element={<ProductDetail />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/:id" element={<ProductDetailPage />} />
+          <Route path="/product/:id" element={<ProductDetailPage />} />
+          <Route path="/cart" element={<CartPage />} />
         </Routes>
       </main>
 
-      <footer className="lopedia-footer">
-        <div className="footer-bottom">
-          <p>
-            &copy; {new Date().getFullYear()} Lopedia Store. All rights
-            reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
