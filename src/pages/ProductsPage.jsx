@@ -68,47 +68,51 @@ export default function ProductsPage() {
         </div>
       ) : (
         <div className="product-grid">
-          {filteredProducts.map((product) => (
-            <div key={product.id} className="product-card">
-              <Link
-                to={`/products/${product.id}`}
-                className="product-image-box"
-              >
-                <img
-                  src={
-                    getOptimizedImageUrl
-                      ? getOptimizedImageUrl(product.image, 350)
-                      : product.image
-                  }
-                  alt={product.title || "Product Image"}
-                  loading="lazy"
-                  decoding="async"
-                  width="200"
-                  height="200"
-                />
-              </Link>
-
-              <div className="product-info">
-                <span className="product-category">{product.category}</span>
-                <Link to={`/products/${product.id}`}>
-                  <h3 className="product-title">{product.title}</h3>
-                </Link>
-              </div>
-
-              <div className="product-footer">
-                <span className="product-price">
-                  ${product.price?.toFixed(2)}
-                </span>
-                <button
-                  className="add-to-cart-btn"
-                  onClick={() => addToCart(product, 1)}
-                  aria-label={`Add ${product.title || "product"} to cart`}
+          {filteredProducts.map((product, index) => {
+            const isPriority = index < 4;
+            return (
+              <div key={product.id} className="product-card">
+                <Link
+                  to={`/products/${product.id}`}
+                  className="product-image-box"
                 >
-                  Add to Cart
-                </button>
+                  <img
+                    src={
+                      getOptimizedImageUrl
+                        ? getOptimizedImageUrl(product.image, 350)
+                        : product.image
+                    }
+                    alt={product.title || "Product Image"}
+                    loading={isPriority ? "eager" : "lazy"}
+                    fetchpriority={isPriority ? "high" : "auto"}
+                    decoding="async"
+                    width="200"
+                    height="200"
+                  />
+                </Link>
+
+                <div className="product-info">
+                  <span className="product-category">{product.category}</span>
+                  <Link to={`/products/${product.id}`}>
+                    <h3 className="product-title">{product.title}</h3>
+                  </Link>
+                </div>
+
+                <div className="product-footer">
+                  <span className="product-price">
+                    ${product.price?.toFixed(2)}
+                  </span>
+                  <button
+                    className="add-to-cart-btn"
+                    onClick={() => addToCart(product, 1)}
+                    aria-label={`Add ${product.title || "product"} to cart`}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

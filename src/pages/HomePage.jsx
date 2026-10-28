@@ -41,8 +41,13 @@ export default function HomePage() {
             ? Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="skeleton-card" />
               ))
-            : hotItems.map((product) => (
-                <ProductCard key={product.id} product={product} badge="HOT" />
+            : hotItems.map((product, index) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  badge="HOT"
+                  index={index}
+                />
               ))}
         </div>
       </section>
@@ -63,7 +68,12 @@ export default function HomePage() {
                 <div key={i} className="skeleton-card" />
               ))
             : bestSellers.map((product) => (
-                <ProductCard key={product.id} product={product} badge="TOP" />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  badge="TOP"
+                  index={4}
+                />
               ))}
         </div>
       </section>
@@ -93,7 +103,12 @@ export default function HomePage() {
                 <div key={i} className="skeleton-card" />
               ))
             : newArrivals.map((product) => (
-                <ProductCard key={product.id} product={product} badge="NEW" />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  badge="NEW"
+                  index={4}
+                />
               ))}
         </div>
       </section>
@@ -101,8 +116,9 @@ export default function HomePage() {
   );
 }
 
-function ProductCard({ product, badge }) {
+function ProductCard({ product, badge, index = 4 }) {
   const { addToCart } = useCart();
+  const isPriority = index < 4;
 
   return (
     <div className="product-card">
@@ -110,8 +126,9 @@ function ProductCard({ product, badge }) {
         {badge && <span className="card-badge">{badge}</span>}
         <img
           src={getOptimizedImageUrl(product.image, 350)}
-          alt={product.title}
-          loading="lazy"
+          alt={product.title || "Product Image"}
+          loading={isPriority ? "eager" : "lazy"}
+          fetchpriority={isPriority ? "high" : "auto"}
           decoding="async"
           width="200"
           height="200"
